@@ -1,0 +1,6 @@
+[Unit]
+Description=Mail about Dell PERC RAID and physical disk state changes
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/apex-raid-check

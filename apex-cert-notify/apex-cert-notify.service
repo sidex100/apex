@@ -1,0 +1,6 @@
+[Unit]
+Description=Mail about nginx ACME certificate renewals and problems
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/apex-cert-notify
