@@ -21,7 +21,6 @@
 |---|---|---|
 | [`apex-cert-notify/`](apex-cert-notify/) | сервер (bash + systemd timer) | Письма о сертификатах nginx-module-acme: новый, продлён, не продлился вовремя, ошибки ACME в логе. У модуля своих уведомлений нет. |
 | [`apex-raid-check/`](apex-raid-check/) | сервер (bash + systemd timer) | Письма при изменении состояния RAID Dell PERC и дисков (perccli + smartctl). |
-| [`apex-ps1/`](apex-ps1/) | ПК с Windows (PowerShell) | Выполнить команду на сервере по SSH и записать команду и вывод в журнал Markdown. |
 
 В каждой папке — свой README: что делает скрипт, как устроен внутри (построчный разбор), как установить и проверить.
 
@@ -61,7 +60,6 @@ Published openly — to study, as documentation, and for anyone who finds them u
 |---|---|---|
 | [`apex-cert-notify/`](apex-cert-notify/) | server (bash + systemd timer) | Mail about nginx-module-acme certificates: new, renewed, not renewed in time, ACME errors in the log. The module has no notifications of its own. |
 | [`apex-raid-check/`](apex-raid-check/) | server (bash + systemd timer) | Mail when Dell PERC RAID or disk state changes (perccli + smartctl). |
-| [`apex-ps1/`](apex-ps1/) | Windows PC (PowerShell) | Run a command on the server over SSH and append the command and its output to a Markdown journal. |
 
 Each folder has its own README: what the script does, how it works inside (walk-through), how to install and test it.
 

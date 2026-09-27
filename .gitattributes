@@ -1,6 +1,5 @@
-# Linux files must stay LF (a CR breaks bash and systemd), Windows scripts - CRLF
+# Linux files must stay LF (a CR breaks bash and systemd)
 *.sh       text eol=lf
 *.service  text eol=lf
 *.timer    text eol=lf
 *.md       text eol=lf
-*.ps1      text eol=crlf
