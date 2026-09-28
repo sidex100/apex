@@ -21,7 +21,7 @@ MegaRAID) и его дисков. Раз в час скрипт снимает �
 | `ALERT (reminder): RAID still not optimal` | всё ещё ненормально — напоминание раз в 12 часов |
 | `OK: RAID back to normal` | вернулось в норму (например, закончилась перестройка) |
 | `INFO: RAID state lines changed` | что-то в снимке изменилось, но всё в норме |
-| `INFO: disk non-medium errors grew` | счётчик non-medium errors диска вырос больше чем на 10 с прошлого отчёта |
+| `INFO: disk non-medium errors grew` | счётчик non-medium errors диска вырос больше чем на 100 с прошлого отчёта |
 
 ### Что считается нормой
 Снимок — три вида строк:
@@ -41,8 +41,9 @@ pd 32:1: SSD Onln
 ### Non-medium errors — что это
 Счётчик SAS-диска «ошибки, не связанные с поверхностью/флеш-памятью»: сбросы шины, таймауты, проблемы связи
 с контроллером. Небольшие значения нормальны. Замечено: **каждая перезагрузка добавляет ~3 на диск**
-(контроллер сбрасывает шину) — это безвредно. Поэтому письмо — только если счётчик вырос **больше чем на 10**
-с момента последнего отчёта. Равномерный рост без перезагрузок — повод проверить контроллер, кабели, корзину (backplane).
+(контроллер сбрасывает шину) — это безвредно. Поэтому письмо — только если счётчик вырос **больше чем на 100**
+с момента последнего отчёта (сначала порог был 10 — письмо приходило после каждых 3–4 перезагрузок; неисправный кабель
+или корзина дают сотни ошибок за часы, так что 100 их всё равно ловит). Равномерный рост без перезагрузок — повод проверить контроллер, кабели, корзину (backplane).
 
 ### Требования
 - контроллер Dell PERC и утилита **perccli** (скачивается с сайта Dell, ставится в `/opt/MegaRAID/perccli/perccli64`).
@@ -75,7 +76,7 @@ smartctl -x -d megaraid,0 /dev/bus/0                 # всё о диске 0
 | `STATE_DIR` | `/var/lib/apex-raid-check` | память между запусками |
 | `MAILTO` | `root` | кому писать |
 | `REMIND` | 12 часов | как часто напоминать, пока плохо |
-| `NME_THRESHOLD` | 10 | на сколько должен вырасти счётчик non-medium errors для письма |
+| `NME_THRESHOLD` | 100 | на сколько должен вырасти счётчик non-medium errors для письма |
 
 ### Как устроено (разбор)
 1. **`snapshot()`** вызывает perccli три раза и через `awk` оставляет только нужные колонки — получается короткий
@@ -115,7 +116,7 @@ controller** — together they cover both cases.
 | `ALERT (reminder): RAID still not optimal` | still not normal — reminder every 12 hours |
 | `OK: RAID back to normal` | back to normal (e.g. rebuild finished) |
 | `INFO: RAID state lines changed` | something in the snapshot changed, but everything is normal |
-| `INFO: disk non-medium errors grew` | a disk's non-medium error count grew by more than 10 since the last report |
+| `INFO: disk non-medium errors grew` | a disk's non-medium error count grew by more than 100 since the last report |
 
 ### What is normal
 The snapshot has three kinds of lines (see the example above):
@@ -129,7 +130,7 @@ Any deviation is an ALERT. The mail shows what changed (`<` old, `>` new) and th
 ### Non-medium errors
 A SAS disk counter of errors not related to the media: bus resets, timeouts, link problems with the controller.
 Small values are normal. Observed: **every reboot adds ~3 per disk** (the controller resets the bus) — harmless.
-So a mail is sent only if the counter grew **by more than 10** since the last report. Steady growth without reboots
+So a mail is sent only if the counter grew **by more than 100** since the last report (it was 10 at first — a mail after every 3-4 reboots; a bad cable or backplane gives hundreds within hours, so 100 still catches it). Steady growth without reboots
 means: check the controller, cables, backplane.
 
 ### Requirements
@@ -157,7 +158,7 @@ Useful manual commands — see the Russian section above.
 | `STATE_DIR` | `/var/lib/apex-raid-check` | memory between runs |
 | `MAILTO` | `root` | recipient |
 | `REMIND` | 12 hours | reminder interval while the state is bad |
-| `NME_THRESHOLD` | 10 | growth of the non-medium error count that triggers a mail |
+| `NME_THRESHOLD` | 100 | growth of the non-medium error count that triggers a mail |
 
 ### How it works (walk-through)
 1. **`snapshot()`** calls perccli three times and keeps only the needed columns with `awk` — a short text that is easy

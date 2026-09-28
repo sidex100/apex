@@ -13,7 +13,8 @@ STATE_DIR=/var/lib/apex-raid-check
 MAILTO=root
 TAG="[$(hostname -s)]"
 REMIND=$((12 * 3600))
-NME_THRESHOLD=10
+# 2026-09-28: 10 -> 100: each reboot adds exactly 3 per disk, 10 fired after a few reboots; a bad cable/backplane gives hundreds
+NME_THRESHOLD=100
 
 now=$(date -u +%s)
 send() { printf '%s\n' "$2" | mail -s "$TAG $1" "$MAILTO"; }
